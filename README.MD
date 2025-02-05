@@ -287,30 +287,40 @@ blt $t0 $t3 loop
 # Compilação e Execução
 
 <p>
-    <i>Este código possui um arquivo CmakeLists.txt</br>As diretrizes de execução deste Cmake são:<i>
-    <table border="1">
-      <tr><td><u>cmake .</u></td> <td>Apaga a última compilação realizada contida na pasta build</td></tr>
-      <tr><td><u>make</u></td> <td>Executa a compilação do programa utilizando o gcc, e o resultado vai para a pasta build.</td></tr>
-      <tr><td><u>./CustomVonNeumannMachine testes/example.asm testes/example2.asm  <tipo de escalonamento> <política de cache> </u></td> <td>Executa os programas da pasta teste </td></tr>
-    </table>
-   
-    <i>Códigos para cada tipo de escalonamento:<i>
-    <table border="1">
-      <tr><td><u>1</u></td> <td>FCFS</td></tr>
-      <tr><td><u>2</u></td> <td>Prioridade</td></tr>
-      <tr><td><u>3</u></td> <td>Randômico </td></tr>
-      <tr><td><u>4</u></td> <td>SJF </td></tr>
-    </table>
-
-   
-   <i>Códigos para cada política de cache:<i>
-    <table border="1">
-      <tr><td><u>0</u></td> <td>Sem cache</td></tr>
-      <tr><td><u>1</u></td> <td>LRU</td></tr>
-      <tr><td><u>2</u></td> <td>FIFO </td></tr>
-    </table>
-
+    <i>Este código possui um arquivo CMakeLists.txt.</i><br>
+    <i>As diretrizes de execução deste CMake são:</i>
 </p>
+
+<table border="1">
+  <tr>
+    <td><u>cmake .</u></td>
+    <td>Apaga a última compilação realizada contida na pasta build</td>
+  </tr>
+  <tr>
+    <td><u>make</u></td>
+    <td>Executa a compilação do programa utilizando o gcc, e o resultado vai para a pasta build.</td>
+  </tr>
+  <tr>
+    <td><u>./CustomVonNeumannMachine testes/example.asm testes/example2.asm  &lt;tipo de escalonamento&gt; &lt;política de cache&gt; </u></td>
+    <td>Executa os programas da pasta teste</td>
+  </tr>
+</table>
+
+<p><i>Códigos para cada tipo de escalonamento:</i></p>
+<table border="1">
+  <tr><td><u>1</u></td> <td>FCFS</td></tr>
+  <tr><td><u>2</u></td> <td>Prioridade</td></tr>
+  <tr><td><u>3</u></td> <td>Randômico</td></tr>
+  <tr><td><u>4</u></td> <td>SJF</td></tr>
+</table>
+
+<p><i>Códigos para cada política de cache:</i></p>
+<table border="1">
+  <tr><td><u>0</u></td> <td>Sem cache</td></tr>
+  <tr><td><u>1</u></td> <td>LRU</td></tr>
+  <tr><td><u>2</u></td> <td>FIFO</td></tr>
+</table>
+
 
 # Autores
 
