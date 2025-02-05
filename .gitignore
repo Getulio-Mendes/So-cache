@@ -1,0 +1,9 @@
+cmake-build-debug/
+.idea
+Makefile
+CmakeCache.txt
+CmakeFiles/
+CustomVonNeumannMachine
+cmake_install.cmake
+
+CmakeFiles/CustomVonNeumannMachine
