@@ -309,6 +309,7 @@ blt $t0 $t3 loop
       <tr><td><u>1</u></td> <td>LRU</td></tr>
       <tr><td><u>2</u></td> <td>FIFO </td></tr>
     </table>
+
 </p>
 
 # Autores
