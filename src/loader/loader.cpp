@@ -102,7 +102,7 @@ int loadProgram(std::string inputFile, MainMemory & ram, int initialAddress, int
             size_t pos = instruction.find(label);
             if (pos != std::string::npos) {
                 // Substitute label with address
-                instruction.replace(pos, label.length(), std::bitset<16>(addr).to_string());
+                instruction.replace(pos, label.length(), std::bitset<16>(addr - initialAddress).to_string());
                 estimative += 10;
             }
         }
@@ -110,7 +110,7 @@ int loadProgram(std::string inputFile, MainMemory & ram, int initialAddress, int
             size_t pos = instruction.find(varName);
             if (pos != std::string::npos) {
                 // Substitute variable with address
-                instruction.replace(pos, varName.length(), std::bitset<16>(addr).to_string());
+                instruction.replace(pos, varName.length(), std::bitset<16>(addr - initialAddress).to_string());
             }
         }
         

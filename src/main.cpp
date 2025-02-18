@@ -23,6 +23,17 @@ using namespace std;
 #define QUANTUM 20 
 // 1 instrução = 1 quantum
 
+int MMU::getRealAddr(PCB& p,int addr){
+
+  if(addr < p.finalAddr && addr > p.baseAddr){
+    return p.baseAddr + addr;
+  }
+  else{
+    return -1;
+  }
+  
+}
+
 string getFileName(char* file) {
     string filePath(file);
     filesystem::path path(filePath);
@@ -57,7 +68,7 @@ void* coreManage(void* arg) {
             
             currentProcess->prevTime = chrono::steady_clock::now();
             
-            Core(*info->ram, *currentProcess, info->ioRequests,info->printLock, info->cache);
+            Core(*info->ram,info->mmu, *currentProcess, info->ioRequests,info->printLock, info->cache);
             currentProcess->timestampMS += chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - currentProcess->prevTime);
             
             lock_guard<mutex> lock(*info->queueLock);
@@ -189,6 +200,8 @@ int main(int argc, char* argv[]) {
     
     auto scheduleInfo = make_unique<struct scheduleInfo>();
     scheduleInfo->ram = &ram;
+    MMU mmu;
+    scheduleInfo->mmu = mmu;
     scheduleInfo->processes = new vector<unique_ptr<PCB>>();
     scheduleInfo->ioRequests = new vector<unique_ptr<ioRequest>>();
     scheduleInfo->queueLock = new mutex();

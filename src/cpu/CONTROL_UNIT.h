@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <mutex>
 
-void Core(MainMemory &ram, PCB &process, vector<unique_ptr<ioRequest>>* ioRequests, bool &printLock, Cache &cache);
+void Core(MainMemory &ram,MMU &mmu, PCB &process, vector<unique_ptr<ioRequest>>* ioRequests, bool &printLock, Cache &cache);
 
 struct Instruction_Data{
     string source_register;
@@ -32,6 +32,7 @@ struct Instruction_Data{
 struct ControlContext {
     REGISTER_BANK &registers;
     MainMemory &ram;
+    MMU &mmu;
     vector<unique_ptr<ioRequest>> &ioRequests;
     bool &printLock;
     PCB &process;
@@ -39,6 +40,7 @@ struct ControlContext {
     int &counterForEnd;
     bool &endProgram;
     bool &endExecution;
+    bool &segmentationFault;
     Cache& cache;
     int &clock;
 };

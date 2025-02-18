@@ -44,8 +44,14 @@ struct ioRequest {
 };
 
 
+struct MMU {
+  int getRealAddr(PCB& id,int addr);
+};
+
+
 struct scheduleInfo {
     MainMemory* ram;
+    MMU mmu;
     vector<unique_ptr<PCB>>* processes;
     mutex* queueLock;
     vector<unique_ptr<ioRequest>>* ioRequests;
@@ -54,5 +60,7 @@ struct scheduleInfo {
     Schedulling schedulling;
     Cache cache;
 };
+
+
 
 #endif

@@ -6,7 +6,7 @@
 #include <vector>
 
 
-void Core(MainMemory &ram, PCB &process, vector<unique_ptr<ioRequest>>* ioRequests, bool &printLock, Cache &cache){
+void Core(MainMemory &ram, MMU &mmu, PCB &process, vector<unique_ptr<ioRequest>>* ioRequests, bool &printLock, Cache &cache){
     // load register and state from PCB
     auto &registers = process.regBank;
     
@@ -18,8 +18,9 @@ void Core(MainMemory &ram, PCB &process, vector<unique_ptr<ioRequest>>* ioReques
     int counter = 0;
     bool endProgram = false;
     bool endExecution = false;
+    bool segmentationFault = false;
     
-    ControlContext context{registers, ram, *ioRequests, printLock, process, counter, counterForEnd, endProgram, endExecution,cache,clk};
+    ControlContext context{registers, ram,mmu, *ioRequests, printLock, process, counter, counterForEnd, endProgram, endExecution,segmentationFault,cache,clk};
     
     while(context.counterForEnd > 0){
         if(context.counter >= 4 && context.counterForEnd >= 1){
@@ -56,7 +57,7 @@ void Core(MainMemory &ram, PCB &process, vector<unique_ptr<ioRequest>>* ioReques
         }
     }
 
-    if(context.endProgram){
+    if(context.endProgram || context.segmentationFault){
         context.process.state = State::Finished;
     }    
     
@@ -195,6 +196,11 @@ void Control_Unit::Memory_Acess(Instruction_Data &data, ControlContext &context)
 
     if(data.op == "LW"){
         int decimal_value = ConvertToDecimalValue(stoul(data.addressRAMResult));
+        decimal_value = context.mmu.getRealAddr(context.process,decimal_value);
+        if(decimal_value == -1){
+            context.segmentationFault = true;
+            context.endExecution = true;
+        }
         
         if(context.cache.find(decimal_value)){
             context.registers.acessoEscritaRegistradores[nameregister](context.cache.access(decimal_value,context.clock));
@@ -209,11 +215,21 @@ void Control_Unit::Memory_Acess(Instruction_Data &data, ControlContext &context)
     }
     if(data.op == "LA" || data.op == "LI"){
         int decimal_value = ConvertToDecimalValue(stoul(data.addressRAMResult));
+        decimal_value = context.mmu.getRealAddr(context.process,decimal_value);
+        if(decimal_value == -1){
+            context.segmentationFault = true;
+            context.endExecution = true;
+        }
         
         context.registers.acessoEscritaRegistradores[nameregister](decimal_value);
     }
     else if(data.op == "PRINT" && data.target_register == ""){
         int decimalAddr = ConvertToDecimalValue(stoul(data.addressRAMResult));
+        decimalAddr = context.mmu.getRealAddr(context.process,decimalAddr);
+        if(decimalAddr == -1){
+            context.segmentationFault = true;
+            context.endExecution = true;
+        }
         int value = 0;
 
         if(context.cache.find(decimalAddr)){
@@ -247,6 +263,11 @@ void Control_Unit::Write_Back(Instruction_Data &data, ControlContext &context){
 
     if(data.op == "SW"){
         int decimal_value = ConvertToDecimalValue(stoul(data.addressRAMResult));
+        decimal_value = context.mmu.getRealAddr(context.process,decimal_value);
+        if(decimal_value == -1){
+            context.segmentationFault = true;
+            context.endExecution = true;
+        }
 
         if (context.cache.find(decimal_value)){
             context.cache.write(decimal_value,context.registers.acessoLeituraRegistradores[nameregister](),context.clock);
